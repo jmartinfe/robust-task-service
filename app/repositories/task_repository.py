@@ -22,3 +22,8 @@ class TaskRepository:
     def delete(self, task: Task) -> None:
         self.db.delete(task)
         self.db.commit()
+
+    def update(self, task: Task) -> Task:
+        self.db.commit()
+        self.db.refresh(task)
+        return task

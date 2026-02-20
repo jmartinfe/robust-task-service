@@ -27,4 +27,8 @@ class TaskService:
         task = self.get_task(task_id)
         task.completed = True
         task.completed_at = datetime.now(UTC)
-        return task
+        return self.repository.update(task)
+    
+    def delete_task(self, task_id: UUID) -> None:
+        task = self.get_task(task_id)
+        self.repository.delete(task)

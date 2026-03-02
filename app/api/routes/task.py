@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.repositories.task_repository import TaskRepository
 from app.services.task_service import TaskService
-from app.schemas.task import TaskCreate, TaskRead
+from app.schemas.task import TaskCreate, TaskRead, TaskUpdateStatus
 from uuid import UUID
 
 router = APIRouter(prefix="/tasks", tags=["tasks"])
@@ -24,9 +24,9 @@ def list_tasks(service: TaskService = Depends(get_service)):
 def get_task(task_id: UUID, service: TaskService = Depends(get_service)):
     return service.get_task(task_id)
 
-@router.patch("/{task_id}/complete", response_model=TaskRead)
-def complete_task(task_id: UUID, service: TaskService = Depends(get_service)):
-    return service.complete_task(task_id)
+@router.patch("/{task_id}/new_status", response_model=TaskRead)
+def update_task_status(task_id: UUID, payload: TaskUpdateStatus, service: TaskService = Depends(get_service)):
+    return service.change_task_status(task_id, payload.new_status)
 
 @router.delete("/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_task(task_id: UUID, service: TaskService = Depends(get_service)):

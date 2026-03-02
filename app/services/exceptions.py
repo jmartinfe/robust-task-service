@@ -4,8 +4,9 @@ class TaskNotFoundException(Exception):
         self.task_id = task_id
         super().__init__(f"Task with ID {task_id} not found.")
 
-class TaskAlreadyCompletedException(Exception):
-    """Exception raised when trying to complete an already completed task."""
-    def __init__(self, task_id):
-        self.task_id = task_id
-        super().__init__(f"Task with ID {task_id} is already completed.")
+class StatusTransitionNotAllowedException(Exception):
+    """Exception raised when a status transition is not allowed."""
+    def __init__(self, current_status, new_status):
+        self.current_status = current_status
+        self.new_status = new_status
+        super().__init__(f"Cannot transition task from {current_status} to {new_status}.")

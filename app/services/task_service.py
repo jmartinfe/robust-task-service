@@ -1,7 +1,7 @@
 from app.repositories.task_repository import TaskRepository
 from app.db.models.task import Task
-from app.schemas.task import TaskCreate
-from app.services.exceptions import TaskNotFoundException, TaskAlreadyCompletedException
+from app.schemas.task import TaskCreate, TaskStatus
+from app.services.exceptions import TaskNotFoundException, StatusTransitionNotAllowedException
 from uuid import UUID
 from datetime import datetime, UTC
 
@@ -22,13 +22,25 @@ class TaskService:
         if not task:
             raise TaskNotFoundException(task_id)
         return task
-    
-    def complete_task(self, task_id: UUID) -> Task:
+
+    def is_valid_status_transition(self, current_status: TaskStatus, new_status: TaskStatus) -> bool:
+        valid_transitions = {
+            TaskStatus.CREATED: [TaskStatus.IN_PROGRESS],
+            TaskStatus.IN_PROGRESS: [TaskStatus.ON_HOLD, TaskStatus.COMPLETED],
+            TaskStatus.ON_HOLD: [TaskStatus.IN_PROGRESS],
+            TaskStatus.COMPLETED: []
+        }
+        return new_status in valid_transitions.get(current_status, [])
+
+    def change_task_status(self, task_id: UUID, new_status: TaskStatus) -> Task:
         task = self.get_task(task_id)
-        if task.completed:
-            raise TaskAlreadyCompletedException(task_id)
-        task.completed = True
-        task.completed_at = datetime.now(UTC)
+        if task.status == new_status:
+            return task
+        if not self.is_valid_status_transition(task.status, new_status):
+            raise StatusTransitionNotAllowedException(task.status, new_status)
+        task.status = new_status
+        if (new_status == TaskStatus.COMPLETED):
+            task.completed_at = datetime.now(UTC)
         return self.repository.update(task)
     
     def delete_task(self, task_id: UUID) -> None:

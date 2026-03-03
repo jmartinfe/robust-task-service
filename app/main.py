@@ -5,6 +5,7 @@ from app.db.session import engine
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from app.services.exceptions import TaskNotFoundException, StatusTransitionNotAllowedException
+from app.core.logging_config import setup_logging
 
 def create_app() -> FastAPI:
     app = FastAPI(title="Task Manager API")
@@ -18,6 +19,8 @@ def create_app() -> FastAPI:
     return app
 
 app = create_app()
+
+setup_logging()
 
 # Global exception handlers
 @app.exception_handler(TaskNotFoundException)

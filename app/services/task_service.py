@@ -4,6 +4,9 @@ from app.schemas.task import TaskCreate, TaskStatus
 from app.services.exceptions import TaskNotFoundException, StatusTransitionNotAllowedException
 from uuid import UUID
 from datetime import datetime, UTC
+import logging
+
+logger = logging.getLogger(__name__)
 
 class TaskService:
 
@@ -12,7 +15,10 @@ class TaskService:
 
     def create_task(self,data: TaskCreate) -> Task:
         task = Task(title=data.title)
-        return self.repository.create(task)
+        created_task = self.repository.create(task)
+
+        logger.info(f"Task created with id {created_task.id}")
+        return created_task
 
     def list_tasks(self) -> list[Task]:
         return self.repository.list()
@@ -20,6 +26,7 @@ class TaskService:
     def get_task(self, task_id: UUID):
         task = self.repository.get_by_id(task_id)
         if not task:
+            logger.warning(f"Task with id {task_id} not found")
             raise TaskNotFoundException(task_id)
         return task
 
@@ -37,12 +44,17 @@ class TaskService:
         if task.status == new_status:
             return task
         if not self.is_valid_status_transition(task.status, new_status):
+            logger.warning(f"Invalid status transition for task with id {task_id} from {task.status.value} to {new_status.value}")
             raise StatusTransitionNotAllowedException(task.status.value, new_status.value)
         task.status = new_status
         if (new_status == TaskStatus.COMPLETED):
             task.completed_at = datetime.now(UTC)
-        return self.repository.update(task)
+        updated_task = self.repository.update(task)
+
+        logger.info(f"Task with id {updated_task.id} status updated from {task.status.value} to {new_status.value}")
+        return updated_task
     
     def delete_task(self, task_id: UUID) -> None:
         task = self.get_task(task_id)
         self.repository.delete(task)
+        logger.info(f"Task with id {task_id} deleted")

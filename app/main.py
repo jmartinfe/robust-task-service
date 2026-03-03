@@ -4,7 +4,7 @@ from app.db.base import Base
 from app.db.session import engine
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-from app.services.exceptions import TaskNotFoundException
+from app.services.exceptions import TaskNotFoundException, StatusTransitionNotAllowedException
 
 def create_app() -> FastAPI:
     app = FastAPI(title="Task Manager API")
@@ -26,6 +26,16 @@ async def task_not_found_handler(request: Request, exc: TaskNotFoundException):
         status_code=404,
         content={
             "error": "task_not_found",
+            "message": str(exc)
+        }
+    )
+
+@app.exception_handler(StatusTransitionNotAllowedException)
+async def invalid_status_transition_handler(request: Request, exc: StatusTransitionNotAllowedException):
+    return JSONResponse(
+        status_code=409,
+        content={
+            "error": "invalid_status_transition",
             "message": str(exc)
         }
     )

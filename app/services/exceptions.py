@@ -9,4 +9,4 @@ class StatusTransitionNotAllowedException(Exception):
     def __init__(self, current_status, new_status):
         self.current_status = current_status
         self.new_status = new_status
-        super().__init__(f"Cannot transition task from {current_status} to {new_status}.")
+        super().__init__(f"Status transition from {current_status} to {new_status} is invalid.")

@@ -37,7 +37,7 @@ class TaskService:
         if task.status == new_status:
             return task
         if not self.is_valid_status_transition(task.status, new_status):
-            raise StatusTransitionNotAllowedException(task.status, new_status)
+            raise StatusTransitionNotAllowedException(task.status.value, new_status.value)
         task.status = new_status
         if (new_status == TaskStatus.COMPLETED):
             task.completed_at = datetime.now(UTC)

@@ -46,12 +46,13 @@ class TaskService:
         if not self.is_valid_status_transition(task.status, new_status):
             logger.warning(f"Invalid status transition for task with id {task_id} from {task.status.value} to {new_status.value}")
             raise StatusTransitionNotAllowedException(task.status.value, new_status.value)
+        previous_status = task.status
         task.status = new_status
         if (new_status == TaskStatus.COMPLETED):
             task.completed_at = datetime.now(UTC)
         updated_task = self.repository.update(task)
 
-        logger.info(f"Task with id {updated_task.id} status updated from {task.status.value} to {new_status.value}")
+        logger.info(f"Task with id {updated_task.id} status updated from {previous_status.value} to {new_status.value}")
         return updated_task
     
     def delete_task(self, task_id: UUID) -> None:

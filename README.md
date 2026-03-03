@@ -21,6 +21,7 @@ The goal is to demonstrate service reliability, predictable behavior and product
 - SQLAlchemy
 - Python
 - Pytest
+- Alembic
 
 ## Design Principles
 

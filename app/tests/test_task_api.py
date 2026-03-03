@@ -31,3 +31,13 @@ def test_get_tasks_empty(client):
     response = client.get("/tasks")
     assert response.status_code == 200
     assert response.json() == []
+
+def test_health_check(client):
+    response = client.get("/tasks/health")
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
+
+def test_readiness_check(client):
+    response = client.get("/tasks/health/ready")
+    assert response.status_code == 200
+    assert response.json() == {"status": "ready"}

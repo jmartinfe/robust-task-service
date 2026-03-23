@@ -1,45 +1,60 @@
-# Robust Task Service
+# Backend Architecture Blueprint
 
-A minimal task management service built with FastAPI and SQLAlchemy, focused on robust backend design rather than feature breadth.
+A minimal backend service designed to demonstrate how to build reliable, maintainable APIs from the ground up.
 
-## Purpose
+This project is intentionally simple in functionality, focusing instead on engineering decisions that make a system robust and production-ready.
 
-This project is intentionally small in functionality and centered on engineering practices:
+---
 
-- Explicit error handling
-- Deterministic state transitions
-- Structured logging
-- Health checks
-- Clear persistence layer separation
-- Tests covering non-happy paths
+## What this demonstrates
 
-The goal is to demonstrate service reliability, predictable behavior and production-oriented thinking.
+Rather than feature complexity, this project showcases how to structure a backend service properly:
+
+- Clear separation between API layer, domain logic and persistence
+- Deterministic behavior and explicit state handling
+- Structured logging for observability
+- Consistent error handling and HTTP semantics
+- Test coverage including edge cases
+
+These are the same principles I apply when building real-world backend systems.
+
+---
+
+## Use cases
+
+This kind of structure can be used as a foundation for:
+
+- Backend APIs for web or mobile applications  
+- Automation services and internal tools  
+- Data processing pipelines  
+- Systems that need reliability and predictable behavior  
+
+---
 
 ## Tech Stack
 
-- FastAPI
-- SQLAlchemy
-- Python
-- Pytest
-- Alembic
+- FastAPI  
+- SQLAlchemy  
+- Python  
+- Pytest  
+- Alembic  
 
-## Design Principles
+(The focus is on architecture and design, not on specific technologies.)
 
-- Explicit domain exceptions instead of implicit failures
-- Clear HTTP status semantics
-- Separation between API, domain logic and persistence
-- Observable behavior through logging
-- Incremental evolution toward production readiness
+---
 
-## Roadmap
+## Design approach
 
-- Add structured logging
-- Implement global exception handlers
-- Introduce environment-based configuration
-- Improve test coverage for edge cases
-- Extend observability surface
+- Explicit domain-level error handling  
+- Clear and predictable API behavior  
+- Separation of concerns across layers  
+- Observable systems through logging  
+- Incremental evolution toward production readiness  
+
+---
 
 ## Why this exists
 
-This repository exists as a deliberate exercise in backend engineering discipline:
-building small services with robustness, predictability and clarity as primary goals.
+This project serves as a reusable foundation and reference for building backend services with a focus on clarity, robustness and maintainability.
+
+It reflects how I approach turning simple requirements into solid, production-ready systems.
